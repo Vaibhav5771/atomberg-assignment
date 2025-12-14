@@ -17,7 +17,7 @@ class _FanListScreenState extends State<FanListScreen> {
   final ApiService _apiService = ApiService();
 
   List<Map<String, dynamic>> _fans = [];
-  Map<String, Map<String, dynamic>> _states = {}; // deviceId → state
+  Map<String, Map<String, dynamic>> _states = {};
   bool _isLoading = true;
 
   @override
@@ -25,8 +25,6 @@ class _FanListScreenState extends State<FanListScreen> {
     super.initState();
     _loadEverything();
   }
-
-
 
   Future<void> _loadEverything() async {
     setState(() => _isLoading = true);
@@ -53,14 +51,13 @@ class _FanListScreenState extends State<FanListScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
 
-      /// ───── APP BAR ─────
       appBar: AppBar(
         backgroundColor: Colors.black,
         centerTitle: true,
         shape: const Border(
           bottom: BorderSide(
             color: Colors.white,
-            width: 0.5, // small border
+            width: 0.5,
           ),
         ),
         title: const Text(
@@ -76,14 +73,13 @@ class _FanListScreenState extends State<FanListScreen> {
         ],
       ),
 
-      /// ───── BODY ─────
+
       body: _isLoading
           ? const Center(
         child: CircularProgressIndicator(),
       )
           : Column(
         children: [
-          /// ───── FAN LIST ─────
           Expanded(
             child: _fans.isEmpty
                 ? _buildEmptyState()
@@ -112,7 +108,6 @@ class _FanListScreenState extends State<FanListScreen> {
             ),
           ),
 
-          /// ───── CONTINUE BUTTON ─────
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
             child: PrimaryButton(
@@ -132,11 +127,7 @@ class _FanListScreenState extends State<FanListScreen> {
     );
   }
 
-  /// ───── EMPTY / DEMO STATE ─────
   Widget _buildEmptyState() {
-    final bool isDemo =
-    _apiService.getApiStatus().toLowerCase().contains('fallback');
-
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -158,11 +149,15 @@ class _FanListScreenState extends State<FanListScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            isDemo
-                ? 'Currently in demo mode'
-                : 'Make sure fans are added in Atomberg app',
+            'Make sure your fans are added in the Atomberg app\nand you are logged in',
             style: AppTextStyles.body,
             textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          PrimaryButton(
+            text: 'Refresh',
+            isLoading: false,
+            onPressed: _loadEverything,
           ),
         ],
       ),

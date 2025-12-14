@@ -41,7 +41,6 @@ class _FanControlScreenState extends State<FanControlScreen> {
         };
   }
 
-  // -------- TIMER LABEL --------
   String _timerLabel(int value) {
     switch (value) {
       case 1:
@@ -57,7 +56,6 @@ class _FanControlScreenState extends State<FanControlScreen> {
     }
   }
 
-  // -------- REFRESH --------
   Future<void> _refreshState() async {
     if (_isLoading) return;
     setState(() => _isLoading = true);
@@ -80,7 +78,6 @@ class _FanControlScreenState extends State<FanControlScreen> {
     );
   }
 
-  // -------- SEND COMMAND --------
   Future<void> _sendCommand(Map<String, dynamic> commands) async {
     final success =
     await _apiService.controlDevice(widget.fan['device_id'], commands);
@@ -133,7 +130,7 @@ class _FanControlScreenState extends State<FanControlScreen> {
         shape: const Border(
           bottom: BorderSide(
             color: Colors.white,
-            width: 0.5, // small border
+            width: 0.5,
           ),
         ),
         actions: [
@@ -157,7 +154,6 @@ class _FanControlScreenState extends State<FanControlScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // -------- FAN INFO CARD --------
               FanInfoCard(
                 fan: widget.fan,
                 isOnline: isOnline,
@@ -165,7 +161,6 @@ class _FanControlScreenState extends State<FanControlScreen> {
 
               const SizedBox(height: 40),
 
-              // -------- POWER --------
               PowerControls(
                 isOn: isOn,
                 onOn: () => _sendCommand({"power": "on"}),
@@ -174,7 +169,6 @@ class _FanControlScreenState extends State<FanControlScreen> {
 
               const SizedBox(height: 40),
 
-              // -------- SPEED --------
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -201,19 +195,14 @@ class _FanControlScreenState extends State<FanControlScreen> {
 
               const SizedBox(height: 40),
 
-              // -------- MODES --------
               ModesSection(
                 isBoostActive: isBoost,
                 onBoostOn: () => _sendCommand({"fan_speed": 6}),
                 onBoostOff: () => _sendCommand({"fan_speed": 3}),
               ),
 
-
               const SizedBox(height: 40),
 
-              // -------- TIMER --------
-
-              const SizedBox(height: 50),
             ],
 
           ),

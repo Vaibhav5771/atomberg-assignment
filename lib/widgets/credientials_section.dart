@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'credential_text_field.dart';
 import 'labeled_crediential_field.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 
 
 class CredentialsSection extends StatelessWidget {
@@ -10,6 +10,8 @@ class CredentialsSection extends StatelessWidget {
   final TextEditingController refreshTokenController;
   final bool saveCredentials;
   final ValueChanged<bool?> onSaveCredentialsChanged;
+  final VoidCallback onOpenDeveloperPortal;
+
 
   const CredentialsSection({
     super.key,
@@ -17,7 +19,9 @@ class CredentialsSection extends StatelessWidget {
     required this.refreshTokenController,
     required this.saveCredentials,
     required this.onSaveCredentialsChanged,
+    required this.onOpenDeveloperPortal,
   });
+
 
   @override
   Widget build(BuildContext context) {
@@ -113,12 +117,7 @@ class CredentialsSection extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: InkWell(
-            onTap: () async {
-              final uri = Uri.parse('https://developer.atomberg-iot.com/');
-              if (await canLaunchUrl(uri)) {
-                await launchUrl(uri, mode: LaunchMode.externalApplication);
-              }
-            },
+            onTap: onOpenDeveloperPortal,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -127,18 +126,16 @@ class CredentialsSection extends StatelessWidget {
                   child: Icon(
                     Icons.link,
                     size: 16,
-                    color: Colors.white, // leading icon in white
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(width: 8),
-                Flexible(
+                const Flexible(
                   child: Text(
-                    'You can get your API Key and'
-                        ' Refresh Token from Atomberg Developer Portal',
+                    'You can get your API Key and Refresh Token from Atomberg Developer Portal',
                     maxLines: 2,
-                    softWrap: true,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'IBMPlexSans',
                       fontSize: 13,
                       fontWeight: FontWeight.w400,

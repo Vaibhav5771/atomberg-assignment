@@ -6,6 +6,7 @@ import '../widgets/app_alert_type.dart';
 import '../widgets/credientials_section.dart';
 import 'fan_list.dart';
 import '../widgets/primary_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,14 +17,28 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _apiKeyController = TextEditingController();        // Empty
-  final _refreshTokenController = TextEditingController(); // Empty
+  final _apiKeyController = TextEditingController();
+  final _refreshTokenController = TextEditingController();
   bool _saveCredentials = false;
 
   final ApiService _apiService = ApiService();
 
   bool _isLoading = false;
   String? _errorMessage;
+
+  Future<void> _openWeb(String url) async {
+    final uri = Uri.parse(url);
+    if (!await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    )) {
+      showAppAlertDialog(
+        context: context,
+        type: AppAlertType.error,
+        message: 'Could not open link',
+      );
+    }
+  }
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
@@ -43,7 +58,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
       setState(() => _isLoading = false);
 
-      // Allow navigation even in demo/fallback mode
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -76,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
         shape: const Border(
           bottom: BorderSide(
             color: Colors.white,
-            width: 0.5, // small border
+            width: 0.5,
           ),
         ),
         title: const Text(
@@ -102,8 +116,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       _saveCredentials = value ?? false;
                     });
                   },
+                  onOpenDeveloperPortal: () {
+                    _openWeb('https://developer.atomberg-iot.com/');
+                  },
                 ),
-
 
                 const SizedBox(height: 24),
 

@@ -63,11 +63,11 @@ class FanCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Stack(
             children: [
-              /// ───────── CONTENT ─────────
+
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /// Header
+
                   Row(
                     children: [
                       Expanded(
@@ -91,7 +91,6 @@ class FanCard extends StatelessWidget {
 
                   const SizedBox(height: 8),
 
-                  /// Metadata
                   RichText(
                     text: TextSpan(
                       style: const TextStyle(
@@ -158,8 +157,6 @@ class FanCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
 
-
-                  /// Power Status
                   Row(
                     children: [
                       Icon(
@@ -181,7 +178,6 @@ class FanCard extends StatelessWidget {
                     ],
                   ),
 
-                  /// Speed + Mode Badge
                   if (isOn) ...[
                     const SizedBox(height: 6),
                     Row(
@@ -220,7 +216,6 @@ class FanCard extends StatelessWidget {
 
                   const SizedBox(height: 12),
 
-                  /// CTA
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 10),
@@ -243,7 +238,6 @@ class FanCard extends StatelessWidget {
                 ],
               ),
 
-              /// ───────── WIFI STATUS ─────────
               Positioned(
                 top: 2,
                 right: 2,

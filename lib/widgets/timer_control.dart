@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class TimerControl extends StatelessWidget {
-  final int timer; // 0–4
+  final int timer;
   final String Function(int) labelBuilder;
   final ValueChanged<int> onTimerChanged;
 
