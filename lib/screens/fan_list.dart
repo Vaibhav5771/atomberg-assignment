@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../utils/app_text_styles.dart';
 import '../widgets/app_alart_dialog.dart';
 import '../widgets/app_alert_type.dart';
 import '../widgets/fan_card.dart';
@@ -64,12 +65,7 @@ class _FanListScreenState extends State<FanListScreen> {
         ),
         title: const Text(
           'My Devices List',
-          style: TextStyle(
-            fontFamily: 'IBMPlexSans',
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         actions: [
           IconButton(
@@ -165,10 +161,7 @@ class _FanListScreenState extends State<FanListScreen> {
             isDemo
                 ? 'Currently in demo mode'
                 : 'Make sure fans are added in Atomberg app',
-            style: const TextStyle(
-              color: Colors.grey,
-              fontFamily: 'IBMPlexSans',
-            ),
+            style: AppTextStyles.body,
             textAlign: TextAlign.center,
           ),
         ],

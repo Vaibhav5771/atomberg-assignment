@@ -1,4 +1,5 @@
 // lib/services/api_service.dart - FINAL WORKING VERSION (Matches Real API)
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -147,53 +148,72 @@ class ApiService {
 
   // ==================== 4. CONTROL DEVICE - CORRECT FORMAT ====================
   Future<bool> controlDevice(String deviceId, Map<String, dynamic> commands) async {
-    print('\n🎛️ Controlling device: $deviceId');
-    print('Commands: $commands');
-
-    // Demo mode
-    if (deviceId == 'dc54750c8234' && _apiHasServerError) {
-      print('✅ Simulated control (server error mode)');
-      await Future.delayed(const Duration(milliseconds: 400));
-      return true;
-    }
-
     final accessToken = await storage.read(key: 'access_token');
     final apiKey = await storage.read(key: 'api_key');
 
     if (accessToken == null || apiKey == null) {
-      print('ℹ️ No token - simulating success');
-      return true;
+      _lastError = 'Missing credentials';
+      return false;
+    }
+
+    // Convert UI commands → Atomberg API format
+    final Map<String, dynamic> apiCommand = {};
+
+    if (commands.containsKey('power')) {
+      apiCommand['power'] = commands['power'] == 'on';
+    }
+
+    if (commands.containsKey('fan_speed')) {
+      apiCommand['speed'] = commands['fan_speed'];
+    }
+
+    if (commands.containsKey('timer')) {
+      // Atomberg supports 0,1,2,3,4 (hours)
+      apiCommand['timer'] = commands['timer'] == 0 ? 0 : 2;
     }
 
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/device_control'),  // Correct endpoint
+        Uri.parse('$baseUrl/send_command'),
         headers: {
-          'x-api-key': apiKey,                    // REQUIRED!
+          'x-api-key': apiKey,
           'Authorization': 'Bearer $accessToken',
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
         body: jsonEncode({
           "device_id": deviceId,
-          "commands": commands,  // Must be an object like {"power": "on", "fan_speed": 3}
+          "command": apiCommand,
         }),
       );
 
-      print('Control Response: ${response.statusCode} ${response.body}');
+      debugPrint('SEND_COMMAND → ${response.statusCode} ${response.body}');
 
       if (response.statusCode == 200) {
-        print('✅ Device control successful!');
-        return true;
-      } else {
-        print('❌ Control failed: ${response.statusCode}');
-        return false;
+        final body = jsonDecode(response.body);
+
+        // ✅ Command executed
+        if (body['status'] == 'Success') {
+          return true;
+        }
+
+        // ⚠️ Device offline (expected case)
+        if (body['message'] == 'Device is offline') {
+          _lastError = 'Device is offline';
+          return false;
+        }
       }
+
+      _lastError = 'Command failed';
+      return false;
     } catch (e) {
-      print('⚠️ Control network error: $e');
-      return true; // Allow demo success
+      _lastError = 'Network error';
+      debugPrint('SEND_COMMAND error: $e');
+      return false;
     }
   }
+
+
 
   // ==================== 5. CONVENIENCE METHODS ====================
   Future<bool> turnOn(String deviceId) => controlDevice(deviceId, {"power": "on"});

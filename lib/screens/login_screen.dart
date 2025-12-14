@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../utils/app_text_styles.dart';
 import '../widgets/app_alart_dialog.dart';
 import '../widgets/app_alert_type.dart';
 import '../widgets/credientials_section.dart';
@@ -80,12 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         title: const Text(
           'Enter your credentials',
-          style: TextStyle(
-            fontFamily: 'IBMPlexSans',
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
       ),
       body: Padding(
@@ -116,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: const EdgeInsets.only(bottom: 16),
                     child: Text(
                       _errorMessage!,
-                      style: const TextStyle(color: Colors.red, fontSize: 14),
+                      style: AppTextStyles.error,
                       textAlign: TextAlign.center,
                     ),
                   ),
