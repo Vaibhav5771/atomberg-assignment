@@ -1,16 +1,57 @@
-# atomberg
+# Atomberg Fan Control App (Flutter)
 
-A new Flutter project.
+Flutter-based Android application developed as part of the **Atomberg Intern – App Development** assignment.
 
-## Getting Started
+This app allows users to authenticate using Atomberg Developer credentials and control their smart fans using official APIs.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Login using **API Key** and **Refresh Token**
+- Fetch and display list of registered smart fans
+- Fan control options:
+  - Power ON/OFF
+  - Speed control
+  - Fan modes
+  - Timer control
+  - LED control
+- Real-time device state synchronization
+- Clean, production-ready UI
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## Tech Stack
+
+- **Flutter** (Android)
+- Atomberg Developer REST APIs
+- Provider-based state management
+- Material UI
+
+---
+
+## APK Download
+
+### GitHub Release (v1.0.0)
+
+**Direct APK download:**
+
+- **arm64-v8a** (recommended, most modern Android phones)  
+  https://github.com/Vaibhav5771/atomberg-assignment/releases/download/v1.0.0/app-arm64-v8a-release.apk
+
+- **armeabi-v7a** (older 32-bit Android devices)  
+  Available under Releases
+
+- **x86_64** (Android emulators / x86 devices)  
+  Available under Releases
+
+**Release page:**  
+https://github.com/Vaibhav5771/atomberg-assignment/releases/tag/v1.0.0
+
+---
+
+## Build Instructions
+
+```bash
+flutter pub get
+flutter run
