@@ -1,7 +1,10 @@
-// lib/screens/login_screen.dart
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../widgets/app_alart_dialog.dart';
+import '../widgets/app_alert_type.dart';
+import '../widgets/credientials_section.dart';
 import 'fan_list.dart';
+import '../widgets/primary_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _apiKeyController = TextEditingController();        // Empty
   final _refreshTokenController = TextEditingController(); // Empty
+  bool _saveCredentials = false;
 
   final ApiService _apiService = ApiService();
 
@@ -48,17 +52,41 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Login failed. Please check your API Key and Refresh Token.';
       });
+
+      if (mounted) {
+        showAppAlertDialog(
+          context: context,
+          type: AppAlertType.error,
+          message: 'Login failed',
+        );
+      }
     }
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Atomberg Developer Login'),
+        backgroundColor: Colors.black,
         centerTitle: true,
+        shape: const Border(
+          bottom: BorderSide(
+            color: Colors.white,
+            width: 0.5, // small border
+          ),
+        ),
+        title: const Text(
+          'Enter your credentials',
+          style: TextStyle(
+            fontFamily: 'IBMPlexSans',
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -68,51 +96,21 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.wind_power, size: 80, color: Colors.teal),
-                const SizedBox(height: 32),
-                const Text(
-                  'Atomberg Smart Fan Control',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Enter your developer credentials below',
-                  style: TextStyle(color: Colors.grey),
-                ),
-                const SizedBox(height: 32),
 
-                // API Key Field
-                TextFormField(
-                  controller: _apiKeyController,
-                  decoration: const InputDecoration(
-                    labelText: 'API Key (x-api-key)',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.key),
-                    hintText: 'Paste your API Key here',
-                  ),
-                  validator: (value) =>
-                  value?.trim().isEmpty ?? true ? 'API Key is required' : null,
-                  maxLines: 1,
+                CredentialsSection(
+                  apiKeyController: _apiKeyController,
+                  refreshTokenController: _refreshTokenController,
+                  saveCredentials: _saveCredentials,
+                  onSaveCredentialsChanged: (value) {
+                    setState(() {
+                      _saveCredentials = value ?? false;
+                    });
+                  },
                 ),
-                const SizedBox(height: 16),
 
-                // Refresh Token Field (larger for long JWT)
-                TextFormField(
-                  controller: _refreshTokenController,
-                  decoration: const InputDecoration(
-                    labelText: 'Refresh Token',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.token),
-                    hintText: 'Paste your Refresh Token here',
-                  ),
-                  validator: (value) =>
-                  value?.trim().isEmpty ?? true ? 'Refresh Token is required' : null,
-                  maxLines: 4,
-                  minLines: 2,
-                ),
+
                 const SizedBox(height: 24),
 
-                // Error Message
                 if (_errorMessage != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),
@@ -122,36 +120,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-
-                // Login Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _login,
-                    child: _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                      'Login & Load Fans',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                ),
-
                 const SizedBox(height: 32),
-
-                // Help text
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    'To get these credentials:\n'
-                        '1. Open Atomberg Home app\n'
-                        '2. Go to Profile → Developer Mode → Enable\n'
-                        '3. Copy API Key and Refresh Token',
-                    style: TextStyle(fontSize: 13, color: Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
+                PrimaryButton(
+                  text: 'Continue',
+                  isLoading: _isLoading,
+                  onPressed: _login,
                 ),
+                const SizedBox(height: 32),
               ],
             ),
           ),
