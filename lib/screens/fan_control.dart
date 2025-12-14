@@ -115,6 +115,7 @@ class _FanControlScreenState extends State<FanControlScreen> {
     final int currentSpeed = _state['speed'] ?? 0;
     final bool isOnline = _state['is_online'] ?? false;
     final int timerHours = _state['timer_hours'] ?? 0;
+    final bool isBoost = currentSpeed == 6;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -174,34 +175,43 @@ class _FanControlScreenState extends State<FanControlScreen> {
               const SizedBox(height: 40),
 
               // -------- SPEED --------
-              SpeedControl(
-                isOn: isOn,
-                speed: currentSpeed,
-                onSpeedChanged: (speed) {
-                  if (speed == 0) {
-                    _sendCommand({"power": "off"});
-                  } else {
-                    _sendCommand({"power": "on", "fan_speed": speed});
-                  }
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SpeedControl(
+                    isOn: isOn,
+                    speed: currentSpeed,
+                    onSpeedChanged: (speed) {
+                      if (speed == 0) {
+                        _sendCommand({"power": "off"});
+                      } else {
+                        _sendCommand({"power": "on", "fan_speed": speed});
+                      }
+                    },
+                  ),
+
+                  TimerControl(
+                    timer: timerHours,
+                    labelBuilder: _timerLabel,
+                    onTimerChanged: (v) => _sendCommand({"timer": v}),
+                  ),
+                ],
               ),
+
 
               const SizedBox(height: 40),
 
               // -------- MODES --------
               ModesSection(
+                isBoostActive: isBoost,
                 onBoostOn: () => _sendCommand({"fan_speed": 6}),
                 onBoostOff: () => _sendCommand({"fan_speed": 3}),
               ),
 
+
               const SizedBox(height: 40),
 
               // -------- TIMER --------
-              TimerControl(
-                timer: timerHours,
-                labelBuilder: _timerLabel,
-                onTimerChanged: (v) => _sendCommand({"timer": v}),
-              ),
 
               const SizedBox(height: 50),
             ],

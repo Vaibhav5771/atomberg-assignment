@@ -69,6 +69,8 @@ flutter:
     - assets/images/logo.svg
     - assets/icons/api.svg
     - assets/icons/refresh.svg
+    - assets/icons/fan.svg
+    - assets/icons/timer.svg
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

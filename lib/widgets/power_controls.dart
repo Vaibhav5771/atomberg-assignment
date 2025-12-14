@@ -14,25 +14,28 @@ class PowerControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const Text('Power', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-              onPressed: isOn ? null : onOn,
-              child: const Text('TURN ON'),
+    return Center(
+      child: GestureDetector(
+        onTap: isOn ? onOff : onOn,
+        child: Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 2),
+            color: isOn
+                ? Colors.green.withOpacity(0.25) // ON background
+                : Colors.transparent, // OFF background
+          ),
+          child: Center(
+            child: Icon(
+              Icons.power_settings_new,
+              size: 36,
+              color: isOn ? Colors.green : Colors.red,
             ),
-            ElevatedButton(
-              onPressed: !isOn ? null : onOff,
-              child: const Text('TURN OFF'),
-            ),
-          ],
+          ),
         ),
-      ],
+      ),
     );
   }
 }
